@@ -10,7 +10,10 @@
       }
    ],
    'delete':[  
-      '<home>/Downloads/*.<extensions.deletes>'
+      {  
+         'src':'<home>/Downloads/*.<extensions.deletes>',
+         'days':7
+      }
    ],
    'extensions':{  
       'docs':[  
@@ -26,6 +29,7 @@
       ],
       'pics':[  
          'jpg',
+         'JPG',
          'gif',
          'png',
          'tif'
