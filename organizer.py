@@ -34,19 +34,34 @@ class Organizer:
     def clean_up(self, src, days):
         now = time.time()
         cutoff = now - (days * 86400)
-        
-        extensions = [".exe", ".zip", ".msi", ".torrent", ".jar", ".tar.gz", ".dmg"]
-        
-        files = os.listdir(src)
-        for xfile in files:
-            full_path = os.path.join(src, xfile)
-            if os.path.isfile(full_path):
-                t = os.stat(full_path)
-                c = t.st_ctime
-    
-                # delete file if older than days
-                if c < cutoff and any(x in xfile for x in extensions):
-                    os.remove(full_path)
+        for file in glob.iglob(src):
+            try:
+                if not os.path.exists(file):
+                    print("src for move of " + src + " doesn't exist, skipped trying to move it")
+                else:
+                    fileStats = os.stat(file)
+                    creationTime = fileStats.st_ctime
+                    if creationTime < cutoff:
+                        if os.path.isdir(file):
+                            shutil.rmtree(file)
+                        elif os.path.isfile(file):
+                            os.remove(file)
+                        else:
+                            print("Unknown item, not a file or dir. Skipping delete of: " + file)
+                        print("deleted:" + file)
+            except Exception:
+                print(traceback.format_exc())
+                    
+    def process_delete_rules(self):
+        if not 'delete' in self.rules:
+            print("no delete rule")
+            return False
+        for rule in self.rules['delete']:
+            if '<extensions.' in rule['src']:
+                extension_type = re.search(r'<extensions.(.*)>', rule['src'], re.M).group(1)
+                for extension in self.rules['extensions'][extension_type]:
+                    src = rule['src'].replace('<extensions.' + extension_type + '>', extension)
+                    self.clean_up(src, rule['days'])
                     
     def proccess_move_rules(self):
         if not 'move' in self.rules:
@@ -76,7 +91,7 @@ def main():
     organizer = Organizer()
     if (organizer.read_rules()):
         organizer.proccess_move_rules()
-#         organizer.clean_up(downloadsDir, 7)
+        organizer.process_delete_rules()
     else:
         print("Failed to read rules.txt, program exited.")
 

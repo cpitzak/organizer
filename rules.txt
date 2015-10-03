@@ -38,7 +38,10 @@
          'exe',
          'dmg',
          'tar.gz',
-         'gz'
+         'gz',
+         'download',
+         'pkg',
+         'zip'
       ]
    }
 }
