@@ -15,11 +15,11 @@ Tested on Windows 7 and Mac OSX.
 ```
 
 ## Keywords
-  * <home> - will be turned into the location of the home directory of the user running this program
-  * <year-month> or <month-year> - will be turned into the current month and year
+  * \<home\> - will be turned into the location of the home directory of the user running this program
+  * \<year-month\> or <month-year> - will be turned into the current month and year
   * src - location of source
   * dst - lcoation of destination
-  * <extensions.foo> - will look for the word "foo" in the extensions map
+  * \<extensions.foo\> - will look for the word "foo" in the extensions map
   * extensions - a map that as values has arrays of extensions. You can make any array of extension you want and reference as <extensions.myNewArray>
   * delete - an array of maps to the src to delete after days old
   * days - number of days
