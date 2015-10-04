@@ -86,10 +86,15 @@ class Organizer:
         for file in glob.iglob(src):
             try:
                 if not os.path.exists(file):
-                    print("src for move of " + src + " doesn't exist, skipped trying to move it")
+                    print("src for move of " + file + " doesn't exist, skipped trying to move it")
                 else:
-                    shutil.move(file, dst)
-                    print("moved:" + file + ", to: " + dst)
+                    filename = os.path.basename(file)
+                    moveResult = os.path.join(dst, filename)
+                    if os.path.exists(moveResult):
+                        print("Skipping move of %s to %s because same name file exists there" % (file, moveResult))
+                    else:
+                        shutil.move(file, dst)
+                        print("moved: " + file + " to: " + dst)
             except Exception:
                 print(traceback.format_exc())
     
