@@ -5,6 +5,7 @@ import os
 import platform
 import re
 import shutil
+import sys
 import time
 import traceback
 from os.path import expanduser
@@ -16,9 +17,9 @@ class Organizer:
     timeNow = datetime.datetime.now()
     home = expanduser("~")
     
-    def read_rules(self):
+    def read_rules(self, filename):
         try:
-            rulesFile = open('rules.txt', 'r').read()
+            rulesFile = open(filename, 'r').read()
             rulesFile = rulesFile.replace('<home>', self.home)
             rulesFile = rulesFile.replace('<month-year>', str(self.timeNow.month) + "-" + str(self.timeNow.year))
             rulesFile = rulesFile.replace('<year-month>', str(self.timeNow.year) + "-" + str(self.timeNow.month))
@@ -93,13 +94,36 @@ class Organizer:
                 print(traceback.format_exc())
     
 def main():
-    organizer = Organizer()
-    if (organizer.read_rules()):
-        organizer.proccess_move_rules()
-        organizer.process_delete_rules()
-        print("completed")
+    filename = None
+    defaultFile = 'rules.txt'
+    usage = """usage: python organizer.py [rules_file]
+                    rules_file (optional) - the file with the rules. If not specified then %s
+                                            will attempt to be read at the same location as organizer.py 
+            """ % defaultFile
+    if len(sys.argv) == 1:
+        if not os.path.isfile(defaultFile):
+            print("Failed to read %s" % defaultFile)
+            print(usage)
+        else:
+            filename = defaultFile
+    elif len(sys.argv) == 2:
+        if not os.path.isfile(sys.argv[1]):
+            print("Failed to read %s" % sys.argv[1])
+        else:
+            filename = sys.argv[1]
     else:
-        print("Failed to read rules.txt, program exited.")
+        print(usage)
+        
+    if filename:
+        organizer = Organizer()
+        if (organizer.read_rules(filename)):
+            organizer.proccess_move_rules()
+            organizer.process_delete_rules()
+            print("completed")
+        else:
+            print("Malformed rules in %s, program exited." % filename)
+    else:
+        print("No file read, exited program")
 
 if __name__ == "__main__":
     main()
