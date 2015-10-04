@@ -97,8 +97,8 @@ def main():
     filename = None
     defaultFile = 'rules.txt'
     usage = """usage: python organizer.py [rules_file]
-                    rules_file (optional) - the file with the rules. If not specified then %s
-                                            will attempt to be read at the same location as organizer.py 
+                    rules_file (optional) - the file with the rules. If not specified then will
+                    attempt to be read %s at the same location as organizer.py 
             """ % defaultFile
     if len(sys.argv) == 1:
         if not os.path.isfile(defaultFile):

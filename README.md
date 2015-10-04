@@ -9,6 +9,7 @@ Tested on Windows 7 and Mac OSX.
   
 ```
 	usage: python organizer.py [rules_file]
-                  rules_file (optional) - the file with the rules. If not specified then %s
-                                          will attempt to be read at the same location as organizer.py
+           
+           rules_file - the file with the rules. If not specified then will
+           attempt to be read rules.txt at the same location as organizer.py
 ```
