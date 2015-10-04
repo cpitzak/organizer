@@ -13,3 +13,14 @@ Tested on Windows 7 and Mac OSX.
            rules_file - the file with the rules. If not specified then will
            attempt to be read rules.txt at the same location as organizer.py
 ```
+
+## Keywords
+  * <home> - will be turned into the location of the home directory of the user running this program
+  * <year-month> or <month-year> - will be turned into the current month and year
+  * src - location of source
+  * dst - lcoation of destination
+  * <extensions.foo> - will look for the word "foo" in the extensions map
+  * extensions - a map that as values has arrays of extensions. You can make any array of extension you want and reference as <extensions.myNewArray>
+  * delete - an array of maps to the src to delete after days old
+  * days - number of days
+  * move - an array of maps to the src and dst of what to move
