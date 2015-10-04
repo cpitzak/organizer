@@ -11,6 +11,10 @@
       {  
          'src':'<home>/Desktop/*.pgn',
          'dst':'<home>/Documents/chess'
+      },
+      {  
+         'src':'<home>/Desktop/myFile.exe',
+         'dst':'<home>/Documents/programs'
       }
    ],
    'delete':[  
