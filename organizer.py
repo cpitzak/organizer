@@ -76,8 +76,6 @@ class Organizer:
                 extensionType = re.search(r'<extensions.(.*)>', rule['src'], re.M).group(1)
                 for extension in self.rules['extensions'][extensionType]:
                     src = rule['src'].replace('<extensions.' + extensionType + '>', extension)
-                    if not os.path.exists(rule['dst']):
-                        os.makedirs(rule['dst'])
                     self.move_files(src, rule['dst'], extension)
             else:
                 self.move_files(rule['src'], rule['dst'], extension)
@@ -93,6 +91,8 @@ class Organizer:
                     if os.path.exists(moveResult):
                         print("Skipping move of %s to %s because same name file exists there" % (file, moveResult))
                     else:
+                        if not os.path.exists(dst):
+                            os.makedirs(dst)
                         shutil.move(file, dst)
                         print("moved: " + file + " to: " + dst)
             except Exception:
