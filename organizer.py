@@ -2,27 +2,30 @@ import ast
 import datetime
 import glob
 import os
+import platform
 import re
 import shutil
 import time
 import traceback
 from os.path import expanduser
-from __builtin__ import True
 from distutils.file_util import move_file
 
 class Organizer:
     
     rules = None
-    time_now = datetime.datetime.now()
+    timeNow = datetime.datetime.now()
     home = expanduser("~")
     
     def read_rules(self):
         try:
-            rules_file = open('rules.txt', 'r').read()
-            rules_file = rules_file.replace('<home>', self.home)
-            rules_file = rules_file.replace('<month-year>', str(self.time_now.month) + "-" + str(self.time_now.year))
-            rules_file = rules_file.replace('<year-month>', str(self.time_now.year) + "-" + str(self.time_now.month))
-            self.rules = ast.literal_eval(rules_file)
+            rulesFile = open('rules.txt', 'r').read()
+            rulesFile = rulesFile.replace('<home>', self.home)
+            rulesFile = rulesFile.replace('<month-year>', str(self.timeNow.month) + "-" + str(self.timeNow.year))
+            rulesFile = rulesFile.replace('<year-month>', str(self.timeNow.year) + "-" + str(self.timeNow.month))
+            if (platform.system() == 'Windows'):
+                rulesFile = rulesFile.replace('\\', '\\\\')
+                rulesFile = rulesFile.replace('/', '\\\\')
+            self.rules = ast.literal_eval(rulesFile)
         except Exception:
             print(traceback.format_exc())
             return False
@@ -58,9 +61,9 @@ class Organizer:
             return False
         for rule in self.rules['delete']:
             if '<extensions.' in rule['src']:
-                extension_type = re.search(r'<extensions.(.*)>', rule['src'], re.M).group(1)
-                for extension in self.rules['extensions'][extension_type]:
-                    src = rule['src'].replace('<extensions.' + extension_type + '>', extension)
+                extensionType = re.search(r'<extensions.(.*)>', rule['src'], re.M).group(1)
+                for extension in self.rules['extensions'][extensionType]:
+                    src = rule['src'].replace('<extensions.' + extensionType + '>', extension)
                     self.clean_up(src, rule['days'])
                     
     def proccess_move_rules(self):
@@ -69,12 +72,14 @@ class Organizer:
             return False
         for rule in self.rules['move']:
             if '<extensions.' in rule['src']:
-                extension_type = re.search(r'<extensions.(.*)>', rule['src'], re.M).group(1)
-                for extension in self.rules['extensions'][extension_type]:
-                    src = rule['src'].replace('<extensions.' + extension_type + '>', extension)
+                extensionType = re.search(r'<extensions.(.*)>', rule['src'], re.M).group(1)
+                for extension in self.rules['extensions'][extensionType]:
+                    src = rule['src'].replace('<extensions.' + extensionType + '>', extension)
                     if not os.path.exists(rule['dst']):
                         os.makedirs(rule['dst'])
                     self.move_files(src, rule['dst'], extension)
+            else:
+                self.move_files(rule['src'], rule['dst'], extension)
     
     def move_files(self, src, dst, extension):
         for file in glob.iglob(src):
@@ -92,6 +97,7 @@ def main():
     if (organizer.read_rules()):
         organizer.proccess_move_rules()
         organizer.process_delete_rules()
+        print("completed")
     else:
         print("Failed to read rules.txt, program exited.")
 

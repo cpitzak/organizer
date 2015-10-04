@@ -7,6 +7,10 @@
       {  
          'src':'<home>/Desktop/*.<extensions.pics>',
          'dst':'<home>/Pictures/desktop/<year-month>'
+      },
+      {  
+         'src':'<home>/Desktop/*.pgn',
+         'dst':'<home>/Documents/chess'
       }
    ],
    'delete':[  
