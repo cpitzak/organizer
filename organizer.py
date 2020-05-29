@@ -97,7 +97,7 @@ class Organizer:
 
 def main():
     filename = None
-    default_file = 'rules.txt'
+    default_file = 'rules.json'
     usage = """usage: python organizer.py [rules_file]
                     rules_file (optional) - the file with the rules. If not specified then will
                     attempt to be read %s at the same location as organizer.py 
